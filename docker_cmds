@@ -1,0 +1,15 @@
+
+su - postgres && psql 
+
+alter user postgres with password '@Dh15ccs2020';
+create user dhis with encrypted password '@Dh15ccs2020';
+
+###########################   dhis     ############# ##############
+docker build   -t crysiscore/dhis:v2.31  .
+
+docker run -d \
+    --name ccs_dhis \
+    -p 8080:8080 \
+     crysiscore/dhis:v2.31 
+
+create extension postgis;
