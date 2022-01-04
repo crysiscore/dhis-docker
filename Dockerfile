@@ -9,14 +9,14 @@ LABEL mantainer="Agnaldo Samuel  <asamuel@pedaids.org>"
 RUN apt-get update && \
 apt-get install -y curl wget apt-utils net-tools inetutils-ping iproute
 
-# Download and install Apache tomcat 7
-RUN wget https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.94/bin/apache-tomcat-7.0.94.tar.gz  && \
-tar -xzf apache-tomcat-7.0.94.tar.gz -C /usr/local/  && \
-mv /usr/local/apache-tomcat-7.0.94  /usr/local/tomcat7 && \
-rm -rf /usr/local/tomcat7/webapps/examples && \
-rm -rf /usr/local/tomcat7/webapps/docs && \
-rm -rf /usr/local/tomcat7/webapps/ROOT && \
-rm -f apache-tomcat-7.0.94.tar.gz
+# Download and install Apache tomcat 8
+RUN wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.9/bin/apache-tomcat-8.5.9.tar.gz && \
+tar -xzf apache-tomcat-8.5.9.tar.gz -C /usr/local/  && \
+mv /usr/local/apache-tomcat-8.5.9  /usr/local/tomcat8 && \
+rm -rf /usr/local/tomcat8/webapps/examples && \
+rm -rf /usr/local/tomcat8/webapps/docs && \
+rm -rf /usr/local/tomcat8/webapps/ROOT && \
+rm -f apache-tomcat-8.5.9.tar.gz
 
 # Install Oracle JDK
 RUN wget https://www.dropbox.com/s/64ywzo9iavw0spn/jdk-8u5-linux-x64.tar.gz?dl=0  && \
@@ -35,17 +35,17 @@ RUN useradd -d /home/dhis -m dhis -s /bin/false
 COPY config  /home/dhis/config
 RUN chown dhis:dhis /home/dhis/config
 
-COPY dhis.war   /usr/local/tomcat7/webapps/
-COPY setenv.sh    /usr/local/tomcat7/bin/
+COPY dhis.war   /usr/local/tomcat8/webapps/
+COPY setenv.sh    /usr/local/tomcat8/bin/
 
 
-ENV CATALINA_HOME /usr/local/tomcat7
+ENV CATALINA_HOME /usr/local/tomcat8
 ENV PATH $PATH:$CATALINA_HOME/bin
 
 
-VOLUME ["/usr/local/tomcat7/webapps","/root/"]
+VOLUME ["/usr/local/tomcat8/webapps","/root/"]
 
-WORKDIR /usr/local/tomcat7/bin
+WORKDIR /usr/local/tomcat8/bin
 
 EXPOSE 8080
 

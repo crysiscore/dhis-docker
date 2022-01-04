@@ -3,13 +3,42 @@ su - postgres && psql
 
 alter user postgres with password '@Dh15ccs2020';
 create user dhis with encrypted password '@Dh15ccs2020';
-
+ALTER USER dhis WITH SUPERUSER;
+GRANT USAGE ON SCHEMA public TO dhis;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO dhis;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO dhis;
 ###########################   dhis     ############# ##############
 docker build   -t crysiscore/dhis:v2.31  .
 
 docker run -d \
     --name ccs_dhis \
     -p 8080:8080 \
+    -p 8009:8009
      crysiscore/dhis:v2.31 
 
+docker run -d  --name dhis  -p 5595:5595  -p 8009:8009   crysiscore/dhis:v2.31_tomcat8
+
+
+
+docker run -d \
+    --name dhis_test_envinroment \
+    -p 5459:8080 \
+    crysiscore/dhis:v2.31_tomcat8
 create extension postgis;
+
+
+
+
+docker run -d \
+    --name ccs_dhis \
+    -p 8080:8080 \
+    -p 8009:8009
+     crysiscore/dhis:v2.31 
+
+     -- formacao 
+
+docker run -d    --name dhis_formacao   -p 8080:8080      crysiscore/dhis:v2.31_tomcat8
+GRANT CONNECT ON DATABASE dhis3 TO dhis;
+GRANT USAGE ON SCHEMA public TO my_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO my_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO my_user;
