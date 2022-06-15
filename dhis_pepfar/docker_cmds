@@ -1,0 +1,36 @@
+
+su - postgres && psql 
+
+psql -U postgres -w -d  dhis_pepfar < dhis2.sql 
+alter user postgres with password '@Dh15ccs2020';
+create user dhis with encrypted password '@Dh15ccs2020';
+ALTER USER dhis WITH SUPERUSER;
+GRANT USAGE ON SCHEMA public TO dhis;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO dhis;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO dhis;
+create extension postgis;
+###########################   dhis     ############# ##############
+docker build   -t crysiscore/dhis:v2.31  .
+
+
+docker run -d  --name dhis        -p 5595:5595  -p 8009:8009   crysiscore/dhis:v2.31_tomcat8
+
+docker run -d --name dhis_pepfar  -p 8080:8080  -v /data_ssd_2/dhis_config:/DHIS2_home dhis2/core:2.37.6-tomcat-9.0.27-jdk11-openjdk-slim
+docker run -d --name dhis_pepfar  -p 5459:5459  -v /data_ssd_2/dhis_config:/DHIS2_home dhis2/core:2.37.6-tomcat-9.0.27-jdk11-openjdk-slim
+docker run -d --name dhis_pepfar  -p 5459:5459  -v /data_ssd_2/dhis_config:/DHIS2_home dhis2/core:2.37.6-tomcat-9.0.27-jdk11-openjdk-slim
+
+
+GRANT CONNECT ON DATABASE dhis_pepfar TO dhis;
+GRANT USAGE ON SCHEMA public TO my_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO my_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO my_user;
+
+
+   <Connector port="5459" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               maxThreads="150" SSLEnabled="true">
+    <SSLHostConfig>
+            <Certificate certificateKeyFile="certs/mail_ccsaude_org_mz.key" 
+                         certificateFile="certs/nginx_bundle.crt"
+                        certificateChainFile="certs/new/SectigoRSAOrganizationValidationSecureServerCA.crt"  type="RSA" />
+    </SSLHostConfig>
+    </Connector>
